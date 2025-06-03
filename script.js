@@ -5,7 +5,7 @@ alert("Welcome to Tic Tac Toe! Please open the console to see the game.");
 //Gameboard Object
 // gameBoard.displayBoard();
 function createGameBoard() {
-    const cellArray = [[1, 2, 3], [5, 5, 5], [7, 8, 9]]
+    const cellArray = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     // const cellArray = Array(9);
     // cellArray.fill(" ", 0, 9);
     function displayBoard(){

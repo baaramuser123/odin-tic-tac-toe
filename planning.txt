@@ -27,3 +27,29 @@ Gameflow, contains function that checks for 3 in a row
 contains function that includes all the calls of other functions/objects to run game from start to finish
 contains function that takes player input through prompts
 creating new game with this object initiates start of game sequence
+
+
+
+HTML Plan
+-pleasant yellow background
+-Header, centered with title "Welcome to TicTacToe!", header is a lighter yellow than background
+-#Display div that contains buttons and Player Displays, then contains game flow messages.
+-#Buttons div for Start Game, Change Grid Size, Add Players
+-#Player-Display- TABLE for those registered, games played, won, etc. no borders,
+ max height 300px and scrollable
+-#Grid Div, centered, pretty big and square. Borders are same light yellow as header,
+ grid filled in by JS.
+-Start Game button is hidden until two players are registered.
+-All Buttons hidden on GameStart, FLOW Messages fill #Display
+-On Game Conclusion, add a "Finish Game" button to refresh original screen.
+
+
+Buttons Plan
+-Add Players button will call up a form for Name, color, shape.
+-Created Players will add to a table, have a + on left side, and a red X on right side.
+-Plus on Left Side will highlight when clicked, red X on right will delete player.
+-When hitting Start Game, will inform you to highlight 2 players(and only 2 players)
+-Start Game will check for 2 players, then will ask which player should go first.
+    Will also clear out the #Display div in the DOM.
+-Grid becomes clickable upon game start, and each grid item should
+ become unclickable after being clicked.
