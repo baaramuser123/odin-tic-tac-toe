@@ -1,0 +1,29 @@
+Tic Tac Toe
+-should ask for a player's name, and provide text input, also ask x's or o's
+-name text input & shape select should create player object that stores:
+         name, wins/losses, shape
+-repeat above
+-generate new board
+-collect input from player 1 to fill one array cell
+-fill array cell
+-redisplay board
+-collect input from player 2 to fill one array cell
+-fill array cell
+-repeat until player 1 does this at least 3 times
+-after each fill, check if 3 in a row are formed
+    -if yes, end game, and award win to player that just played their turn, loss to other player
+after turn 9 and after 3row check, end game and award no points. 
+-Display that it's a tie
+-start up a new game.
+
+
+Object breakdowns
+Player, simple object that stores simple variables for name, score, shape.
+
+Gameboard, also a simple object that stores the array for the grid and 
+maybe a function that displays the grid
+
+Gameflow, contains function that checks for 3 in a row
+contains function that includes all the calls of other functions/objects to run game from start to finish
+contains function that takes player input through prompts
+creating new game with this object initiates start of game sequence
