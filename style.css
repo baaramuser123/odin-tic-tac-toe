@@ -1,0 +1,115 @@
+:root {
+    --grid-cell-length: 3;
+    --square-size: 80px;
+}
+
+
+@font-face {
+    font-family: 'Playpen Sans';
+    src: url('./assets/fonts/PlaypenSans-Regular.woff2') format('woff2'),
+        url('./assets/fonts/PlaypenSans-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+body {
+    margin: 0px;
+    font-family:'Playpen Sans';
+}
+
+svg {
+    width: 100% ;
+    height: 100% ;
+    fill: none;
+    stroke: currentColor; 
+    stroke-width: 2 ;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+svg.octagon, svg.triangle {
+    width: 80%;
+    height: 80%;
+    padding: 10%;
+}
+
+button {
+    font-family: 'Playpen Sans';
+    font-size: 20px;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.226);
+    background: linear-gradient(135deg, #fff8d5 60%, white);
+    padding: 10px;
+
+}
+
+#main-contain {
+    min-height: 100vh;
+    background-color: #f9e1a8;
+    box-sizing: content-box;
+    display: grid;
+    grid-template-rows: 150px 300px 1fr;
+}
+
+#header {
+    background-color: #fff8d5;
+    text-align: center;
+    font-size: 30px;
+    align-content: center;
+}
+
+#display {
+    padding: 30px;
+    display: grid;
+}
+
+#buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    
+}
+
+#players {
+    font-size: 20px;
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+    overflow: auto;
+}
+
+#players td {
+    padding: 10px 20px;
+}
+
+
+#grid {
+    /* background-color: lightblue; */
+    display: grid;
+    grid-template-columns: repeat(var(--grid-cell-length), var(--square-size));
+    grid-template-rows: repeat(var(--grid-cell-length), var(--square-size));
+    padding-top: 40px;
+    justify-content: center;
+}
+
+#grid>* {
+    border: 5px solid #fff8d5;
+    border-radius: 10px;
+}
+
+#grid>.top {
+    border-top: transparent;
+}
+
+#grid>.bottom {
+    border-bottom: transparent;
+}
+
+#grid>.left {
+    border-left: transparent;
+}
+
+#grid>.right {
+    border-right: transparent;
+}

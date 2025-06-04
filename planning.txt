@@ -39,7 +39,7 @@ HTML Plan
  max height 300px and scrollable
 -#Grid Div, centered, pretty big and square. Borders are same light yellow as header,
  grid filled in by JS.
--Start Game button is hidden until two players are registered.
+-Start Game button is GrayedOUT until two players are registered.
 -All Buttons hidden on GameStart, FLOW Messages fill #Display
 -On Game Conclusion, add a "Finish Game" button to refresh original screen.
 
