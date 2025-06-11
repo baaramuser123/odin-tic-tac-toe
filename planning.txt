@@ -45,11 +45,12 @@ HTML Plan
 
 
 Buttons Plan
--Add Players button will call up a form for Name, color, shape.
--Created Players will add to a table, have a + on left side, and a red X on right side.
--Plus on Left Side will highlight when clicked, red X on right will delete player.
--When hitting Start Game, will inform you to highlight 2 players(and only 2 players)
--Start Game will check for 2 players, then will ask which player should go first.
+-Add Players button will call up a form for Name.
+-Created Players will add to a table, and a red X on right side.
+-red X on right will delete player.
+-When hitting Start Game, will not click until 2 players are added
+-Start Game will bring up form asking you to select player 1 and 2, as well as color and shape for each, using dropdowns.
     Will also clear out the #Display div in the DOM.
 -Grid becomes clickable upon game start, and each grid item should
  become unclickable after being clicked.
+-Finish Game button displayed after game concludes, should Display to show original buttons and playerlist, blank out grid.

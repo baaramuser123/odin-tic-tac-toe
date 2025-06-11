@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic-Tac-Toe</title>
     <link rel="stylesheet" href="./style.css">
-    <script src="./script.js"></script>
+    <script defer src="./script.js"></script>
 </head>
 <body>
 <div id="main-contain">
@@ -18,34 +18,9 @@
             <button id="add-player">+ Add Player</button>
         </div>
         <div id="players">
-            <table>
-                <tr>
-                    <td class="player-name">Player 1</td>
-                    <td class="player-games">Games Played: 2</td>
-                    <td class="player-wins">Wins: 1</td>
-                    <td class="player-losses">Losses: 1</td>
-                </tr>
-                <tr>
-                    <td class="player-name">Player 2</td>
-                    <td class="player-games">Games Played: 2</td>
-                    <td class="player-wins">Wins: 1</td>
-                    <td class="player-losses">Losses: 1</td>
-                </tr>
-
-                <tr>
-                    <td class="player-name">Player 2</td>
-                    <td class="player-games">Games Played: 2</td>
-                    <td class="player-wins">Wins: 1</td>
-                    <td class="player-losses">Losses: 1</td>
-                </tr>
-                                <tr>
-                    <td class="player-name">Player 2</td>
-                    <td class="player-games">Games Played: 2</td>
-                    <td class="player-wins">Wins: 1</td>
-                    <td class="player-losses">Losses: 1</td>
-                </tr>
-                
-            </table>
+            <!-- .
+            Table goes here
+            . -->
         </div>
     </div>
     <div id="grid">
@@ -57,12 +32,13 @@
             <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon></svg>
         </div>
         <div>
-            <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="8"></circle></svg>
+            <svg viewBox="0 0 24 24" class="circle">
+                <circle cx="12" cy="12" r="8"></circle>
+            </svg>
             
         </div>
         <div class="right">
-            <svg width="24" height="24" viewBox="0 0 24 24">
+            <svg viewBox="0 0 24 24">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
@@ -75,6 +51,73 @@
         <div class="bottom"></div>
         <div class="bottom right"></div>
     </div>
+    <dialog id="playerModal">
+        <p>Please enter a NEW player name.</p>
+        <form id="playerForm" method="dialog">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <button value="OK">OK</button>
+        </form>
+    </dialog>
+    <dialog id="startModal">
+        <p>Set your players and their pieces.</p>
+        <form id="startForm" method="dialog">
+            <div>
+                <label for="player1">Player 1:</label>
+                <select name="player1" id="player1" required>
+                    <!-- <option value="test">test</option> -->
+                </select>
+            </div>
+            <div>
+                <label for="player1Shape">Shape:</label>
+                <select name="player1Shape" id="player1Shape">
+                    <option value="circle">Circle</option>
+                    <option value="cross">Cross</option>
+                    <option value="triangle">Triangle</option>
+                    <option value="octagon">Octagon</option>
+                </select>
+            </div>
+            <div>
+                <label for="player1Color">Color:</label>
+                <select name="player1Color" id="player1Color">
+                    <option value="black">Black</option>
+                    <option value="red">Red</option>
+                    <option value="pink">Pink</option>
+                    <option value="orange">Orange</option>
+                    <option value="blue">Blue</option>
+                    <option value="green">Green</option>
+                    <option value="purple">Purple</option>
+                </select>
+            </div>
+            <div>
+                <label for="player2">Player 2:</label>
+                <select name="player2" id="player2" required>
+                </select>
+            </div>
+            <div>
+                <label for="player2Shape">Shape:</label>
+                <select name="player2Shape" id="player2Shape">
+                    <option value="circle">Circle</option>
+                    <option value="cross">Cross</option>
+                    <option value="triangle">Triangle</option>
+                    <option value="octagon">Octagon</option>
+                </select>
+            </div>
+            <div>
+                <label for="player2Color">Color:</label>
+                <select name="player2Color" id="player2Color">
+                    <option value="black">Black</option>
+                    <option value="red">Red</option>
+                    <option value="pink">Pink</option>
+                    <option value="orange">Orange</option>
+                    <option value="blue">Blue</option>
+                    <option value="green">Green</option>
+                    <option value="purple">Purple</option>
+                </select>
+            </div>
+            <button value="OK">OK</button>
+        </form>
+    </dialog>
 
 
 </div>
