@@ -11,6 +11,11 @@
 :root {
     --grid-cell-length: 3;
     --square-size: 150px;
+    --circle-color: black;
+    --cross-color: black;
+    --triangle-color: black;
+    --octagon-color: black;
+    --main-contain-row-sizes: 150px 300px 1fr;
 }
 
 
@@ -49,6 +54,22 @@ circle {
     height: 100%;
 }
 
+svg.circle {
+    stroke: var(--circle-color);
+}
+
+svg.cross {
+    stroke: var(--cross-color);
+}
+
+svg.triangle {
+    stroke: var(--triangle-color);
+}
+
+svg.octagon {
+    stroke: var(--octagon-color);
+}
+
 button {
     font-family: 'Playpen Sans';
     font-size: 20px;
@@ -64,7 +85,7 @@ button {
     background-color: #f9e1a8;
     box-sizing: content-box;
     display: grid;
-    grid-template-rows: 150px 300px 1fr;
+    grid-template-rows: var(--main-contain-row-sizes);
 }
 
 #header {
@@ -77,6 +98,7 @@ button {
 #display {
     padding: 30px;
     display: grid;
+    justify-content: center;
 }
 
 #buttons {

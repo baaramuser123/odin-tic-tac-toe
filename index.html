@@ -28,25 +28,12 @@
         <div class="top"></div>
         <div class="top right"></div>
         <div class="left">
-            <svg viewBox="0 0 24 24" class="octagon">
-            <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon></svg>
         </div>
         <div>
-            <svg viewBox="0 0 24 24" class="circle">
-                <circle cx="12" cy="12" r="8"></circle>
-            </svg>
-            
         </div>
         <div class="right">
-            <svg viewBox="0 0 24 24">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
         </div>
         <div class="bottom left">
-            <svg viewBox="0 0 24 24" class="triangle">
-                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-            </svg>
         </div>
         <div class="bottom"></div>
         <div class="bottom right"></div>
@@ -57,11 +44,25 @@
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
             <button value="OK">OK</button>
+            <button value="Cancel">Cancel</button>
+        </form>
+    </dialog>
+    <dialog id="gridSelectModal">
+        <p>Pick a grid size you'd prefer to play on!</p>
+        <form id="gridForm" method="dialog">
+            <label for="grid-size">Grid Size:</label>
+            <select id="grid-size" name="grid-size">
+                <option value="3">3 Cells Long</option>
+                <option value="4">4 Cells Long</option>
+                <option value="5">5 Cells Long</option>
+            </select>
+            <button value="OK">OK</button>
+            <button value="Cancel">Cancel</button>
         </form>
     </dialog>
     <dialog id="startModal">
         <p>Set your players and their pieces.</p>
-        <form id="startForm" method="dialog">
+        <form id="startForm" name="startForm" method="dialog">
             <div>
                 <label for="player1">Player 1:</label>
                 <select name="player1" id="player1" required>
@@ -115,7 +116,7 @@
                     <option value="purple">Purple</option>
                 </select>
             </div>
-            <button value="OK">OK</button>
+            <button type="button" onclick="startClick()" value="OK">OK</button>
         </form>
     </dialog>
 

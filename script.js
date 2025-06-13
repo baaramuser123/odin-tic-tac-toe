@@ -4,9 +4,9 @@ console.log("Get ready for Tic Tac Toe Belowwwwww!!!!!")
 //Gameboard Object
 // gameBoard.displayBoard();
 let gameBoard = createGameBoard();
-function createGameBoard() {
+function createGameBoard(gridLength = 3) {
     //allows grid to be variable(and display well)
-    let gridLength = 3;
+    // gridLength = 3;
     let cssVars = document.querySelector(':root');
     cssVars.style.setProperty('--grid-cell-length', gridLength);
     //
@@ -16,17 +16,11 @@ function createGameBoard() {
         innerArray.fill("", 0, gridLength);
         cellArray.push(innerArray);
     }
-    // const cellArray = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-    // const cellArray = Array(9);
-    // cellArray.fill(" ", 0, 9);
-// <div class="left">
-//     <svg viewBox="0 0 24 24" class="octagon">
-//     <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon></svg>
-// </div>
+
+    //allows a string to be converted to an HTML element
     function htmlToNodes(html) {
         const template = document.createElementNS('http://www.w3.org/2000/svg', 'template');
         template.innerHTML = html;
-        console.log(template);
         if(template.firstChild === template.lastChild){
             return template.firstChild;
         }
@@ -76,14 +70,14 @@ function createGameBoard() {
                     }
                     div.appendChild(svg);
                 }
+                else if(Game.activeGame !== undefined && Game.activeGame.winner==="none" && Game.activeGame.tie === false){
+                    div.classList.add("clickable");
+                }
+                div.setAttribute("data-row", i);
+                div.setAttribute("data-column", k);
                 grid.appendChild(div);
             }
         }
-
-        console.log("[", cellArray[0][0], "]|[", cellArray[0][1], "]|[", cellArray[0][2], "]");
-        console.log("[", cellArray[1][0], "]|[", cellArray[1][1], "]|[", cellArray[1][2], "]");
-        console.log("[", cellArray[2][0], "]|[", cellArray[2][1], "]|[", cellArray[2][2], "]");
-
     };
 
     const shape = [
@@ -103,30 +97,53 @@ function createGameBoard() {
     ]
     return {
         cellArray,
-        displayBoard
+        gridLength,
+        displayBoard,
     };
 }
 
+    function startClick(){
+        const p1 = document.getElementById("player1");
+        const p2 = document.getElementById("player2");
+        const p1Shape = document.getElementById("player1Shape");
+        const p2Shape = document.getElementById("player2Shape");
+        if(p1.value !== p2.value && p1Shape.value !== p2Shape.value){
+            console.log(p1);
+            console.log("click fired");
+            const startForm = document.getElementById("startForm");
+            const dialog = document.getElementById("startModal");
+            dialog.clickedButton = "OK";
+            startForm.submit();
+        }
+        else{
+            alert("Select different players and shapes!");
+        }
+    }
 
 //Buttons
 
 (function buttons(){
-    const buttonsDiv = document.getElementById("buttons");
+    const displayDiv = document.getElementById("display");
     const playerModal = document.getElementById("playerModal");
     const startModal = document.getElementById("startModal");
+    const gridModal = document.getElementById("gridSelectModal");
+    const gridDiv = document.getElementById("grid");
 
-    buttonsDiv.addEventListener("click", (e) => {
+    displayDiv.addEventListener("click", (e) => {
         if(e.target.id == "add-player"){
             playerModal.showModal();
         }
         else if(e.target.id =="start"){
             const player1Select = document.getElementById("player1");
             const player2Select = document.getElementById("player2");
+            player1Select.textContent = "";
+            player2Select.textContent = "";
             for(let i = 0; i < playerList.playerArray.length; i++){
                 let option = document.createElement("option");
                 const optionID = document.createAttribute("value");
                 optionID.value=playerList.playerArray[i].name;
                 option.setAttributeNode(optionID);
+                option.setAttribute("index", i.toString());
                 option.textContent = playerList.playerArray[i].name;
                 optionClone = option.cloneNode(true);
                 player1Select.appendChild(option);
@@ -134,23 +151,88 @@ function createGameBoard() {
             }
             startModal.showModal();
         }
-    });
+        else if(e.target.id == "grid-button"){
+            gridModal.showModal();
+            // gameBoard = createGameBoard(5);
+            // gameBoard.displayBoard();
 
-    playerModal.addEventListener("close", (e) => {
-            const playerForm = document.getElementById("playerForm");
-            new FormData(playerForm);
-            //returns button Value unless closed in another way
-            console.log(e.target.returnValue);
-            playerForm.reset();
+        }
+        else if(e.target.id == "play-again"){
+            gameBoard = createGameBoard();
+            gameBoard.displayBoard();
+            displayDiv.textContent = "";
+            const buttonsDiv = document.createElement("div");
+            buttonsDiv.id = "buttons";
+            const playersDiv = document.createElement("div");
+            playersDiv.id = "players";
+            const startButton = document.createElement("button");
+            startButton.id = "start";
+            startButton.textContent = "Start Game";
+            const gridButton = document.createElement("button");
+            gridButton.id = "grid-button";
+            gridButton.textContent = "Select Grid";
+            const addPlayerButton = document.createElement("button");
+            addPlayerButton.id = "add-player";
+            addPlayerButton.textContent = "+ Add Player";
+            buttonsDiv.append(startButton, gridButton, addPlayerButton);
+            displayDiv.append(buttonsDiv, playersDiv);
+            playerList.displayPlayers();
+            const cssVars = document.querySelector(':root');
+            cssVars.style.setProperty("--main-contain-row-sizes", "150px 300px 1fr");
+        }
         
     });
 
+    gridDiv.addEventListener("click", (e) => {
+        if(e.target.classList.value.includes("clickable")){
+            Game.activeGame.turnsElapsed++;
+            if(Game.activeGame.getActivePlayer() == Game.activeGame.player1){
+                gameBoard.cellArray[e.target.dataset.row][e.target.dataset.column] = Game.activeGame.player1Shape;
+            }
+            else{
+                gameBoard.cellArray[e.target.dataset.row][e.target.dataset.column] = Game.activeGame.player2Shape;
+            }
+            Game.activeGame.checkAdjacent(e.target.dataset.row, e.target.dataset.column);
+            // Game.activeGame.switchActivePlayer();
+            // Game.activeGame.controlMessages();
+            gameBoard.displayBoard();
+        }
+    });
+
+    playerModal.addEventListener("close", (e) => {
+        if(e.target.returnValue !== "OK") {
+            console.log(e);
+            return;
+        }
+        const playerForm = document.getElementById("playerForm");
+        new FormData(playerForm);
+        //returns button Value unless closed in another way
+        // console.log(e.target.returnValue);
+        playerForm.reset();
+        
+    });
+
+    gridModal.addEventListener("close", (e)=> {
+        if(e.target.returnValue !== "OK") {
+                console.log(e);
+                return;
+            }
+        const gridForm = document.getElementById("gridForm");
+        new FormData(gridForm);
+    });
+
+    let selectedPlayer1Index;
+    let selectedPlayer2Index;
+
     startModal.addEventListener("close", (e) => {
-            if(e.target.returnValue!== "OK") return;
+            if(e.target.clickedButton!== "OK") {
+                console.log(e);
+                return;
+            }
+            selectedPlayer1Index = e.target.childNodes[3][0].options.selectedIndex;
+            selectedPlayer2Index = e.target.childNodes[3][3].options.selectedIndex;
             const startForm = document.getElementById("startForm");
             new FormData(startForm);
-            //returns button Value unless closed in another way
-            console.log(e.target.returnValue);
             startForm.reset();
         
     });
@@ -162,15 +244,28 @@ function createGameBoard() {
             // FormData converts values to strings
             playerList.createPlayer(data.get("name"));
         }
+        else if(e.target.id == "gridForm"){
+            const data = e.formData;
+            console.log("data received" + data.get("grid-size"));
+            gameBoard = createGameBoard(+data.get("grid-size"));
+            gameBoard.displayBoard();
+        }
         else if(e.target.id == "startForm"){ 
             // Get the form data from the event object
             const data = e.formData;
+            // fetch player from playerList using index found from form
+            let player1Input = playerList.playerArray[selectedPlayer1Index];
+            let player2Input = playerList.playerArray[selectedPlayer2Index];
             // FormData converts values to strings
-            Game.createGame(data.get("player1"), data.get("player1Shape"), data.get("player1Color"),
-                data.get("player2"), data.get("player2Shape"), data.get("player2Color")
+            const newGame = Game.createGame(player1Input, data.get("player1Shape"), data.get("player1Color"),
+                player2Input, data.get("player2Shape"), data.get("player2Color")
             );
+            Game.gamesArray.push(newGame);
+            Game.activeGame = Game.gamesArray[Game.gamesArray.length-1];
+            gameBoard.displayBoard();
         }
-    })
+    });
+
     
 
 })();
@@ -257,35 +352,151 @@ const playerList = (function(){
 // const game1 = createGame();
 const Game = (function(){
     const gamesArray = [];
+    let activeGame;
+    const turnsElapsed = 0;
 
 function createGame(player1, player1Shape, player1Color, player2, player2Shape, player2Color) {
     let winner = "none";
     let loser = "none";
     let tie = false;
-    //Expected to be adjusted heavily once HTML implemented
-    // const player1Name = prompt("What is player 1's name?").toUpperCase();
-    // const player1Shape = prompt(`Please enter a letter to represent ${player1Name} on the game board!
-    //     (We recommend X or O for a traditional experience.)`)[0].toUpperCase();
-    // const player2Name = prompt("Next, what is player 2's name?").toUpperCase();
-    // let player2Shape;
-    // while(true){
-    //     player2Shape = prompt(`Please enter a letter to represent ${player2Name} on the game board!
-    //     (We recommend X or O for a traditional experience.)`)[0].toUpperCase();
-    //     if (player1Shape!==player2Shape) break;
-    //     alert("Please enter a different letter than Player 1.")
-    // }
-    // const player1 = createPlayer(player1Name, player1Shape);
-    // const player2 = createPlayer(player2Name, player2Shape);
-    const gameBoard = createGameBoard();
-    gameBoard.displayBoard();
-    alert(`Welcome ${player1.name} and ${player2.name}! Behold, the board!`);
-    alert("Notice that the board contains numbers. Each of these corresponds with the space on the board.")
-    alert(`${player1.name} you get to go first, please specify a number from 1-9 for where you want to play.`);
-    playGame();
+    let activePlayer = player1;
+    const gridLength = gameBoard.cellArray.length;
+    controlMessages();
+    //set player colors for shapes
+    const cssVars = document.querySelector(':root');
+    cssVars.style.setProperty(`--${player1Shape}-color`, player1Color);
+    cssVars.style.setProperty(`--${player2Shape}-color`, player2Color);
+    cssVars.style.setProperty("--main-contain-row-sizes", "50px 100px 1fr");
+
+
+    function getActivePlayer(){
+        return activePlayer;
+    }
+
+    function switchActivePlayer(){
+        if(activePlayer == player1) activePlayer = player2;
+        else activePlayer = player1;
+    }
+
+    function checkAdjacent(rowIndex, columnIndex){
+        let subject = gameBoard.cellArray[rowIndex][columnIndex]
+        let adjacentCounts = {
+            vertical: 0,
+            horizontal: 0,
+            backslash: 0,
+            forwardslash:0
+        };
+        function safeArrayCalc (row, rowAdd, column, columnAdd) {
+            let rowCombo = +row+rowAdd;
+            let colCombo = +column+columnAdd;
+            if(rowCombo < 0 || colCombo < 0 || rowCombo >= (gameBoard.cellArray.length - 1)
+                || colCombo >= gameBoard.cellArray[rowCombo].length) {
+                    return undefined;
+                    }
+            return gameBoard.cellArray[rowCombo][colCombo];
+        }
+
+        let direction = [
+            {name: "topLeft", extendedLocation: safeArrayCalc(rowIndex, -2, columnIndex, -2), counter: () => {adjacentCounts.backslash++;}},
+            {name: "top", extendedLocation: safeArrayCalc(rowIndex, -2, columnIndex, 0), counter: () => {adjacentCounts.vertical++;}},
+            {name: "topRight", extendedLocation: safeArrayCalc(rowIndex, -2, columnIndex, 2), counter: () => {adjacentCounts.forwardslash++;}},
+            {name: "left", extendedLocation: safeArrayCalc(rowIndex, 0, columnIndex, -2), counter: () => {adjacentCounts.horizontal++;}},
+            {name: "right", extendedLocation: safeArrayCalc(rowIndex, 0, columnIndex, 2), counter: () => {adjacentCounts.horizontal++;}},
+            {name: "bottomLeft", extendedLocation: safeArrayCalc(rowIndex, 2, columnIndex, -2), counter: () => {adjacentCounts.forwardslash++;}},
+            {name: "bottom", extendedLocation: safeArrayCalc(rowIndex, 2, columnIndex, 0), counter: () => {adjacentCounts.vertical++;}},
+            {name: "bottomRight", extendedLocation: safeArrayCalc(rowIndex, 2, columnIndex, 2), counter: () => {adjacentCounts.backslash++;}},
+        ]
+
+        let directionIndex = 0;
+        for(i= -1; i < 2; i++){
+            for(k = -1; k < 2; k++){
+                if(i==0 && k==0) continue;
+                let valueChecked = safeArrayCalc(rowIndex, i, columnIndex, k);
+                if(valueChecked == subject){
+                    direction[directionIndex].counter();
+                    if(direction[directionIndex].extendedLocation == subject){
+                        direction[directionIndex].counter();
+                    }
+                }
+                directionIndex++;
+            }
+        }
+        let winningDirection;
+        for (const key in adjacentCounts){
+            if(adjacentCounts[key] >= 2){
+                winningDirection = key;
+                Game.activeGame.winner = activePlayer;
+                break;
+            }
+        }
+        if(Game.activeGame.winner !== "none"){
+            controlMessages(`Congrats, ${activePlayer.name} got a ${winningDirection} 3 in a row!`);
+            concludeGame();
+        }
+        else if(Game.activeGame.turnsElapsed == (gameBoard.gridLength**2)){
+            Game.activeGame.tie = true;
+            controlMessages(`Bummer, looks like a tie!`);
+            concludeGame();
+        }
+        else {
+            switchActivePlayer();
+            controlMessages();
+        }
+
+        return {
+            adjacentCounts,
+        }
+    }
+
+    function concludeGame() {
+        if(Game.activeGame.winner == "none"){
+            Game.activeGame.tie = true;
+            // Game.activeGame.player1.increaseWinLoss();
+            // Game.activeGame.player2.increaseWinLoss();
+            Game.activeGame.player1.tie++;
+            Game.activeGame.player2.tie++;
+        }
+        else {
+            if(Game.activeGame.winner == player1) {
+                // Game.activeGame.player1.increaseWinLoss("win");
+                // Game.activeGame.player2.increaseWinLoss("loss");
+                Game.activeGame.player1.wins++;
+                Game.activeGame.player2.loss++;
+                Game.activeGame.loser = player2;
+            }
+            else {
+                // Game.activeGame.player1.increaseWinLoss("loss");
+                // Game.activeGame.player2.increaseWinLoss("win");
+                Game.activeGame.player1.loss++;
+                Game.activeGame.player2.wins++;
+                Game.activeGame.loser = player1;
+            }
+        }
+        Game.activeGame.player1.gamesPlayed++;
+        Game.activeGame.player2.gamesPlayed++;
+    }
+
+    function controlMessages(string = "") {
+        const displayDiv = document.getElementById("display");
+        displayDiv.textContent = "";
+        if(string === ""){
+            displayDiv.textContent = `${activePlayer.name}\'s turn.`
+        }
+        else{
+            displayDiv.textContent = string;
+            const playAgainButton = document.createElement("button");
+            playAgainButton.setAttribute("id", "play-again");
+            playAgainButton.textContent = "Play Again?";
+            displayDiv.appendChild(playAgainButton);
+        }
+    }
+
     function playGame(){
         let playedSpace;
         let rowIndex;
         let columnIndex;
+        
+
         let arrayMap = {
             1: () => {
                     rowIndex = 0;
@@ -326,122 +537,55 @@ function createGame(player1, player1Shape, player1Color, player2, player2Shape, 
         };
 
 
-        let activePlayer = player1;
         const enteredCells = [];
-        for(let i = 1; i < 10; i++){
-            if(i % 2 == 0) activePlayer = player2;
-            else activePlayer = player1;
-            while(true){
-            playedSpace = prompt(`Your turn ${activePlayer.name}! Enter a number(1-9).`);
-            if(!enteredCells.includes(playedSpace)) break;
-            alert('Input Invalid');
-            }
-            enteredCells.push(playedSpace);
-            arrayMap[playedSpace]();
-            gameBoard.cellArray[rowIndex][columnIndex] = activePlayer.shape;
-            gameBoard.displayBoard();
-            checkAdjacent(rowIndex,columnIndex);
-            if(winner !== "none") break;
-        }
-        concludeGame();
+        
+        // for(let i = 1; i < gridLength**2; i++){
+        //     if(i % 2 == 0) activePlayer = player2;
+        //     else activePlayer = player1;
+        //     while(true){
+        //     playedSpace = prompt(`Your turn ${activePlayer.name}! Enter a number(1-9).`);
+        //     if(!enteredCells.includes(playedSpace)) break;
+        //     alert('Input Invalid');
+        //     }
+        //     enteredCells.push(playedSpace);
+        //     arrayMap[playedSpace]();
+        //     gameBoard.cellArray[rowIndex][columnIndex] = activePlayer.shape;
+        //     gameBoard.displayBoard();
+        //     checkAdjacent(rowIndex,columnIndex);
+        //     if(winner !== "none") break;
+        //     controlMessages();
+        // }
+        // concludeGame();
         
 
 
 
-        function checkAdjacent(rowIndex, columnIndex){
-            let subject = gameBoard.cellArray[rowIndex][columnIndex]
-            let adjacentCounts = {
-                vertical: 0,
-                horizontal: 0,
-                backslash: 0,
-                forwardslash:0
-            };
-            function safeArrayCalc (row, rowAdd, column, columnAdd) {
-                let rowCombo = row+rowAdd;
-                let colCombo = column+columnAdd;
-                if(rowCombo < 0 || colCombo < 0 || rowCombo >= (gameBoard.cellArray.length - 1)
-                    || colCombo >= gameBoard.cellArray[rowCombo].length) {
-                        return undefined;
-                        }
-                return gameBoard.cellArray[rowCombo][colCombo];
-            }
+        
 
-            let direction = [
-                {name: "topLeft", extendedLocation: safeArrayCalc(rowIndex, -2, columnIndex, -2), counter: () => {adjacentCounts.backslash++;}},
-                {name: "top", extendedLocation: safeArrayCalc(rowIndex, -2, columnIndex, 0), counter: () => {adjacentCounts.vertical++;}},
-                {name: "topRight", extendedLocation: safeArrayCalc(rowIndex, -2, columnIndex, 2), counter: () => {adjacentCounts.forwardslash++;}},
-                {name: "left", extendedLocation: safeArrayCalc(rowIndex, 0, columnIndex, -2), counter: () => {adjacentCounts.horizontal++;}},
-                {name: "right", extendedLocation: safeArrayCalc(rowIndex, 0, columnIndex, 2), counter: () => {adjacentCounts.horizontal++;}},
-                {name: "bottomLeft", extendedLocation: safeArrayCalc(rowIndex, 2, columnIndex, -2), counter: () => {adjacentCounts.forwardslash++;}},
-                {name: "bottom", extendedLocation: safeArrayCalc(rowIndex, 2, columnIndex, 0), counter: () => {adjacentCounts.vertical++;}},
-                {name: "bottomRight", extendedLocation: safeArrayCalc(rowIndex, 2, columnIndex, 2), counter: () => {adjacentCounts.backslash++;}},
-            ]
+        
 
-            let directionIndex = 0;
-            for(i= -1; i < 2; i++){
-                for(k = -1; k < 2; k++){
-                    if(i==0 && k==0) continue;
-                    let valueChecked = safeArrayCalc(rowIndex, i, columnIndex, k);
-                    if(valueChecked == subject){
-                        direction[directionIndex].counter();
-                        if(direction[directionIndex].extendedLocation == subject){
-                            direction[directionIndex].counter();
-                        }
-                    }
-                    directionIndex++;
-                }
-            }
-            for (const key in adjacentCounts){
-                if(adjacentCounts[key] >= 2){
-                    alert(`congrats, ${activePlayer.name} got a ${key} 3 in a row!`);
-                    winner = activePlayer;
-                    break;
-                }
-            }
-
-            return {
-                adjacentCounts,
-            }
-        }
-
-        function concludeGame() {
-            let resultMessage;
-            if(winner == "none"){
-                tie = true;
-                resultMessage = "tie";
-                player1.increaseWinLoss();
-                player2.increaseWinLoss();
-            }
-            else {
-                resultMessage = `win for ${winner.name}`;
-                if(winner == player1) {
-                    player1.increaseWinLoss("win");
-                    player2.increaseWinLoss("loss");
-                    loser = player2;
-                }
-                else {
-                    player1.increaseWinLoss("loss");
-                    player2.increaseWinLoss("win");
-                    loser = player1;
-                }
-            }
-            alert(`Game Over! Looks like it's a ${resultMessage}!`);
-            alert("If you'd like to play again, start another game with createGame().");
-        }
-
+        
 
     }
     
     return {
         player1,
+        player1Shape,
         player2,
+        player2Shape,
+        turnsElapsed,
         winner,
         loser,
-        tie
+        tie,
+        getActivePlayer,
+        switchActivePlayer,
+        checkAdjacent,
+        controlMessages,
     }
 }
 return {
     createGame,
     gamesArray,
+    activeGame,
 }
 })();
