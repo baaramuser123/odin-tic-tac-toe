@@ -3,22 +3,24 @@ console.log("Get ready for Tic Tac Toe Belowwwwww!!!!!")
 
 //Gameboard Object
 // gameBoard.displayBoard();
-let gameBoard = createGameBoard();
-function createGameBoard(gridLength = 3) {
-    //allows grid to be variable(and display well)
-    // gridLength = 3;
-    let cssVars = document.querySelector(':root');
-    cssVars.style.setProperty('--grid-cell-length', gridLength);
-    //
-    let cellArray=[];
-    for(i=0; i < gridLength; i++){
-        let innerArray=Array(gridLength);
-        innerArray.fill("", 0, gridLength);
-        cellArray.push(innerArray);
-    }
+class createGameBoard {
+    constructor(gridLength){
+        this.gridLength = gridLength;
 
+        let cssVars = document.querySelector(':root');
+        cssVars.style.setProperty('--grid-cell-length', gridLength);
+        this.cellArray=[];
+        for(let i=0; i < gridLength; i++){
+            let innerArray=Array(gridLength);
+            innerArray.fill("", 0, gridLength);
+            this.cellArray.push(innerArray);
+        }
+
+    }
+    //
+    
     //allows a string to be converted to an HTML element
-    function htmlToNodes(html) {
+    htmlToNodes(html) {
         const template = document.createElementNS('http://www.w3.org/2000/svg', 'template');
         template.innerHTML = html;
         if(template.firstChild === template.lastChild){
@@ -28,9 +30,26 @@ function createGameBoard(gridLength = 3) {
     }
 
 
-    function displayBoard(){
+    displayBoard(){
         const grid = document.getElementById("grid");
         grid.textContent="";
+        const gridLength = this.gridLength;
+        const shape = [
+            {name:'circle', 
+            svgText:'<circle cx="12" cy="12" r="8"></circle>'
+            },
+            {name:"cross",
+            svgText:'<line x1="18" y1="6" x2="6" y2="18"></line>'+
+            '<line x1="6" y1="6" x2="18" y2="18"></line>',
+            },
+            {name:'triangle',
+            svgText:'<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>',
+            },
+            {name:'octagon',
+            svgText:'<polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>',
+            },
+        ]
+        const htmlToNodes = this.htmlToNodes;
         for(let i = 0; i < gridLength; i++){
             for(let k = 0; k < gridLength; k++){
                 const div = document.createElement("div");
@@ -38,13 +57,13 @@ function createGameBoard(gridLength = 3) {
                 if(i==(gridLength-1)) div.classList.add("bottom");
                 if(k==0) div.classList.add("left");
                 if(k==(gridLength-1)) div.classList.add("right");
-                if(cellArray[i][k]!==""){
+                if(this.cellArray[i][k]!==""){
                     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
                     svg.setAttribute("viewBox", "0 0 24 24");
                     // const view = document.createAttributeNS("http://www.w3.org/2000/svg","viewBox");
                     // view.value = "0 0 24 24";
                     // svg.setAttributeNode(view);
-                    switch(cellArray[i][k]){
+                    switch(this.cellArray[i][k]){
                         case "circle":
                             svg.classList.add("circle");
                             // let myShape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
@@ -80,45 +99,34 @@ function createGameBoard(gridLength = 3) {
         }
     };
 
-    const shape = [
-        {name:'circle', 
-        svgText:'<circle cx="12" cy="12" r="8"></circle>'
-        },
-        {name:"cross",
-        svgText:'<line x1="18" y1="6" x2="6" y2="18"></line>'+
-        '<line x1="6" y1="6" x2="18" y2="18"></line>',
-        },
-        {name:'triangle',
-        svgText:'<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>',
-        },
-        {name:'octagon',
-        svgText:'<polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>',
-        },
-    ]
-    return {
-        cellArray,
-        gridLength,
-        displayBoard,
-    };
+    
+    // return {
+    //     cellArray,
+    //     gridLength,
+    //     displayBoard,
+    // };
 }
 
-    function startClick(){
-        const p1 = document.getElementById("player1");
-        const p2 = document.getElementById("player2");
-        const p1Shape = document.getElementById("player1Shape");
-        const p2Shape = document.getElementById("player2Shape");
-        if(p1.value !== p2.value && p1Shape.value !== p2Shape.value){
-            console.log(p1);
-            console.log("click fired");
-            const startForm = document.getElementById("startForm");
-            const dialog = document.getElementById("startModal");
-            dialog.clickedButton = "OK";
-            startForm.submit();
-        }
-        else{
-            alert("Select different players and shapes!");
-        }
+let gameBoard = new createGameBoard(3);
+
+//used by html onclick
+function startClick(){
+    const p1 = document.getElementById("player1");
+    const p2 = document.getElementById("player2");
+    const p1Shape = document.getElementById("player1Shape");
+    const p2Shape = document.getElementById("player2Shape");
+    if(p1.value !== p2.value && p1Shape.value !== p2Shape.value){
+        console.log(p1);
+        console.log("click fired");
+        const startForm = document.getElementById("startForm");
+        const dialog = document.getElementById("startModal");
+        dialog.clickedButton = "OK";
+        startForm.submit();
     }
+    else{
+        alert("Select different players and shapes!");
+    }
+}
 
 //Buttons
 
@@ -158,7 +166,7 @@ function createGameBoard(gridLength = 3) {
 
         }
         else if(e.target.id == "play-again"){
-            gameBoard = createGameBoard();
+            gameBoard = new createGameBoard(3);
             gameBoard.displayBoard();
             displayDiv.textContent = "";
             const buttonsDiv = document.createElement("div");
@@ -247,7 +255,7 @@ function createGameBoard(gridLength = 3) {
         else if(e.target.id == "gridForm"){
             const data = e.formData;
             console.log("data received" + data.get("grid-size"));
-            gameBoard = createGameBoard(+data.get("grid-size"));
+            gameBoard = new createGameBoard(+data.get("grid-size"));
             gameBoard.displayBoard();
         }
         else if(e.target.id == "startForm"){ 
